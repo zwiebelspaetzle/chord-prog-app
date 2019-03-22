@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Audio, Icon } from 'expo';
+import ChordButtons from './components/ChordButtons';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,8 +19,9 @@ export default class App extends React.Component {
         <Icon.MaterialCommunityIcons
           name={this.state.isPlaying ? 'pause' : 'play'}
           size={50}
-          onPress={this._onPlayPausePressed}
+          onPress={this._handlePlayPausePress}
         />
+        <ChordButtons />
       </View>
     );
   }
@@ -33,7 +35,7 @@ export default class App extends React.Component {
     }
   }
 
-  _onPlayPausePressed = () => {
+  _handlePlayPausePress = () => {
     if (this.soundObject != null) {
       if (this.state.isPlaying) {
         this.setState({isPlaying: false})
