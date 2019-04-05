@@ -6,23 +6,50 @@ const chords = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'viiᴼ']
 class ChordButtons extends Component {
   constructor(props) {
     super(props)
-    this.state = {selectedButton: null}
+    this.state = {
+      currentButton: this.props.currentChord || 0,
+      selectedButton: null,
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.currentChord !== prevProps.currentChord) {
+      this.setState({
+        currentButton: this.props.currentChord,
+        selectedButton: null
+      })
+    }
   }
 
   render() {
     return (
       <View>
         {chords.map((text, index) => this._getChordButton(text, index))}
+        <Text>Current button: {this.state.currentButton}</Text>
       </View>
     )
   }
 
   _getChordButton = (text, index) => {
+    let buttonStyle = [styles.chordButton]
+
+    if (this.state.currentButton === index) {
+      buttonStyle.push(styles.chordButtonCurrent)
+    }
+    if (this.state.selectedButton === index) {
+      if (this.state.selectedButton == this.state.currentButton) {
+        buttonStyle.push(styles.chordButtonSelected)
+      } else {
+        buttonStyle.push(styles.chordButtonIncorrect)
+      }
+    }
+
     return (
       <TouchableOpacity
         key={index}
         onPress={() => this._handleChordButtonPress(index)}
-        style={[styles.chordButton, (this.state.selectedButton == index) ? styles.chordButtonSelected: null]}
+        style={buttonStyle}
       >
         <Text
           style={[styles.chordButtonText, (this.state.selectedButton == index) ? styles.chordButtonTextSelected: null]}
@@ -48,12 +75,21 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 100,
   },
+  chordButtonCurrent: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+  },
   chordButtonSelected: {
     backgroundColor: '#6480FF',
   },
+  chordButtonIncorrect: {
+    backgroundColor: '#FF3D32',
+  },
   chordButtonText: {
     color: '#6480FF',
-    fontSize: 20
+    fontSize: 20,
   },
   chordButtonTextSelected: {
     color: '#fff',
