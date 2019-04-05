@@ -1,9 +1,11 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Audio, Icon } from 'expo';
-import ChordButtons from './components/ChordButtons';
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Audio, Icon } from 'expo'
+import ChordButtons from './components/ChordButtons'
 
-const tune = 'arkansas_traveler';
+const tune = 'arkansas_traveler'
+import chordMapJson from './assets/audio/arkansas_traveler_map.json'
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -101,84 +103,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
-
-const chordMapJson = [
-  {"chord": 0, "ms": 0},
-  {"chord": 3, "ms": 653},
-  {"chord": 0, "ms": 1226},
-  {"chord": 0, "ms": 1853},
-
-  {"chord": 4, "ms": 2400},
-  {"chord": 4, "ms": 2986},
-  {"chord": 4, "ms": 3600},
-  {"chord": 4, "ms": 4173},
-
-  {"chord": 0, "ms": 4786},
-  {"chord": 3, "ms": 5373},
-  {"chord": 0, "ms": 5986},
-  {"chord": 0, "ms": 6586},
-
-  {"chord": 0, "ms": 7200},
-  {"chord": 3, "ms": 7800},
-  {"chord": 4, "ms": 8400},
-  {"chord": 0, "ms": 8986},
-
-  {"chord": 0, "ms": 9573},
-  {"chord": 3, "ms": 10160},
-  {"chord": 0, "ms": 10746},
-  {"chord": 0, "ms": 11333},
-
-  {"chord": 4, "ms": 11946},
-  {"chord": 4, "ms": 12506},
-  {"chord": 4, "ms": 13106},
-  {"chord": 4, "ms": 13680},
-
-  {"chord": 0, "ms": 14266},
-  {"chord": 3, "ms": 14880},
-  {"chord": 0, "ms": 15480},
-  {"chord": 0, "ms": 16066},
-
-  {"chord": 0, "ms": 16666},
-  {"chord": 3, "ms": 17266},
-  {"chord": 4, "ms": 17906},
-  {"chord": 0, "ms": 18426},
-
-  {"chord": 0, "ms": 19000},
-  {"chord": 3, "ms": 19586},
-  {"chord": 0, "ms": 20173},
-  {"chord": 4, "ms": 20746},
-
-  {"chord": 0, "ms": 21306},
-  {"chord": 4, "ms": 21933},
-  {"chord": 0, "ms": 22493},
-  {"chord": 4, "ms": 23066},
-
-  {"chord": 0, "ms": 23653},
-  {"chord": 3, "ms": 24213},
-  {"chord": 0, "ms": 24800},
-  {"chord": 4, "ms": 25346},
-
-  {"chord": 0, "ms": 25920},
-  {"chord": 3, "ms": 26493},
-  {"chord": 4, "ms": 27093},
-  {"chord": 0, "ms": 27586},
-
-  {"chord": 0, "ms": 28186},
-  {"chord": 3, "ms": 28773},
-  {"chord": 0, "ms": 29346},
-  {"chord": 4, "ms": 29920},
-
-  {"chord": 0, "ms": 30506},
-  {"chord": 4, "ms": 31066},
-  {"chord": 0, "ms": 31640},
-  {"chord": 4, "ms": 32213},
-
-  {"chord": 0, "ms": 32800},
-  {"chord": 3, "ms": 33386},
-  {"chord": 0, "ms": 33960},
-  {"chord": 4, "ms": 34533},
-
-  {"chord": 0, "ms": 35093},
-  {"chord": 3, "ms": 35666},
-  {"chord": 4, "ms": 36266},
-  {"chord": 0, "ms": 36813}]
