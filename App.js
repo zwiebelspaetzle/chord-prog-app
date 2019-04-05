@@ -27,11 +27,18 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Icon.MaterialCommunityIcons
-          name={this.state.isPlaying ? 'pause' : 'play'}
-          size={50}
-          onPress={this._handlePlayPausePress}
-        />
+        <View style={styles.controlsContainer}>
+          <Icon.MaterialCommunityIcons
+            name='skip-backward'
+            size={30}
+            onPress={this._handleBackPress}
+            />
+          <Icon.MaterialCommunityIcons
+            name={this.state.isPlaying ? 'pause' : 'play'}
+            size={50}
+            onPress={this._handlePlayPausePress}
+          />
+        </View>
         <Text>Position: {this._getTimestamp()} ms</Text>
         <ChordButtons currentChord={this.state.currentChord} />
         <Text>Current Chord: {this.state.currentChord}</Text>
@@ -59,6 +66,12 @@ export default class App extends React.Component {
       return `${this.state.soundObjectPosition} / ${this.state.soundObjectDuration}`
     }
     return ''
+  }
+
+  _handleBackPress = () => {
+    if (this.soundObject != null) {
+      this.soundObject.setPositionAsync(0)
+    }
   }
 
   _handlePlayPausePress = () => {
@@ -99,6 +112,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  controlsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
