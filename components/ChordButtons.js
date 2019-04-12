@@ -7,7 +7,7 @@ class ChordButtons extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentButton: this.props.currentChord || 0,
+      currentButton: this.props.currentChord -1 || 0,
       selectedButton: null,
     }
   }
@@ -16,7 +16,7 @@ class ChordButtons extends Component {
     // Typical usage (don't forget to compare props):
     if (this.props.currentChord !== prevProps.currentChord) {
       this.setState({
-        currentButton: this.props.currentChord,
+        currentButton: this.props.currentChord - 1,
         selectedButton: null
       })
     }

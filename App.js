@@ -3,8 +3,23 @@ import { StyleSheet, Switch, Text, View } from 'react-native'
 import { Audio, Icon } from 'expo'
 import ChordButtons from './components/ChordButtons'
 
-const tune = 'arkansas_traveler'
-import chordMapJson from './assets/audio/arkansas_traveler_map.json'
+const skipRestartThreshold = 500 // ms
+const statusUpdateInterval = 50  // ms
+
+const toc = [
+  {
+    "title": "Arkansas Traveler",
+    "difficulty": 2,
+    "audio": require('./assets/audio/arkansas_traveler.mp3'),
+    "map": require('./assets/audio/arkansas_traveler_map.json'),
+  },
+  {
+    "title": "Whiskey Before Breakfast",
+    "difficulty": 2,
+    "audio": require('./assets/audio/whiskey.mp3'),
+    "map": require('./assets/audio/whiskey_map.json'),
+  }
+]
 
 
 export default class App extends React.Component {
@@ -12,7 +27,9 @@ export default class App extends React.Component {
     super(props)
     this.chordMap = null
     this.state = {
-      currentChord: 0,
+      currentChord: 1,
+      currentTune: toc[0],
+      currentTuneIndex: 0,
       isPlaying: false,
       showCurrentChord: true,
       soundObjectDuration: null,
@@ -21,13 +38,16 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    this._getSoundObject()
-    this._loadChordMap()
+    this._loadTune()
   }
 
   render() {
+    let status = (this._getTimestamp()) ? `Position: ${this._getTimestamp()} ms` : 'loading...'
     return (
       <View style={styles.container}>
+        <Text style={styles.h2}>{this.state.currentTune.title}</Text>
+        <Text>{status}</Text>
+
         <View style={styles.controlsContainer}>
           <Icon.MaterialCommunityIcons
             name='skip-backward'
@@ -38,6 +58,11 @@ export default class App extends React.Component {
             name={this.state.isPlaying ? 'pause' : 'play'}
             size={50}
             onPress={this._handlePlayPausePress}
+          />
+          <Icon.MaterialCommunityIcons
+            name='skip-forward'
+            size={30}
+            onPress={this._handleNextPress}
           />
         </View>
 
@@ -51,17 +76,16 @@ export default class App extends React.Component {
           >
           </Switch>
         </View>
-        <Text>Position: {this._getTimestamp()} ms</Text>
       </View>
     );
   }
 
-  async _getSoundObject() {
+  async _getSoundObject(audio) {
     this.soundObject = new Audio.Sound();
     try {
       this.soundObject.setOnPlaybackStatusUpdate(this._onPlaybackStatusUpdate)
-      await this.soundObject.loadAsync(require(`./assets/audio/${tune}.mp3`))
-      this.soundObject.setProgressUpdateIntervalAsync(50)
+      await this.soundObject.loadAsync(audio)
+      this.soundObject.setProgressUpdateIntervalAsync(statusUpdateInterval)
     } catch (error) {
       console.log(error)
     }
@@ -80,8 +104,19 @@ export default class App extends React.Component {
 
   _handleBackPress = () => {
     if (this.soundObject != null) {
-      this.soundObject.setPositionAsync(0)
+      if (this.state.soundObjectPosition < skipRestartThreshold) {
+        let index = (this.state.currentTuneIndex <= 0) ? toc.length - 1 : this.state.currentTuneIndex - 1
+        this._skipToTrack(index)
+      } else {
+        this.soundObject.setPositionAsync(0)
+        this._loadChordMap(this.state.currentTune.map)
+      }
     }
+  }
+
+  _handleNextPress = () => {
+    let index = (this.state.currentTuneIndex + 1 >= toc.length) ? 0 :this.state.currentTuneIndex + 1
+    this._skipToTrack(index)
   }
 
   _handlePlayPausePress = () => {
@@ -100,6 +135,20 @@ export default class App extends React.Component {
     this.setState({showCurrentChord: !this.state.showCurrentChord})
   }
 
+  _loadChordMap(map) {
+    this.chordMap = Array.from(map)
+    this.setState({currentChord: this.chordMap[0]['chord']})
+  }
+
+  _loadTune = () => {
+    this._getSoundObject(this.state.currentTune.audio)
+    this._loadChordMap(this.state.currentTune.map)
+  }
+
+  _nextChord() {
+    this.setState({currentChord: this.chordMap.shift()['chord']})
+  }
+
   _onPlaybackStatusUpdate = status => {
     if (this.chordMap && this.chordMap.length != 0) {
       if (status.positionMillis > this.chordMap[0]['ms']) {
@@ -112,13 +161,16 @@ export default class App extends React.Component {
     })
   }
 
-  _loadChordMap() {
-    this.chordMap = chordMapJson
-    this._nextChord()
-  }
-
-  _nextChord() {
-    this.setState({currentChord: this.chordMap.shift()['chord']})
+  _skipToTrack = (index) => {
+    this.soundObject.pauseAsync()
+    this.setState(
+      {
+        currentTuneIndex: index,
+        currentTune: toc[index],
+        isPlaying: false
+      },
+      this._loadTune
+    )
   }
 }
 
@@ -135,4 +187,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  h2: {
+    // fontFamily: 'Times New Roman',
+    fontSize: 30,
+    fontWeight: 'bold',
+  }
 })

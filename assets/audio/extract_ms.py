@@ -15,7 +15,7 @@ for line in cuefile:
     ms += int(ts[2]) * 1000 / 75 # frames
     ms = int(ms)
 
-    ms_map.append({'chord': 0, 'ms': ms})
+    ms_map.append({'chord': 1, 'ms': ms})
 cuefile.close()
 
 print(ms_map)
