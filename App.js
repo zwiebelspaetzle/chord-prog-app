@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Switch, Text, View } from 'react-native'
 import { Audio, Icon } from 'expo'
 import ChordButtons from './components/ChordButtons'
 
@@ -14,6 +14,7 @@ export default class App extends React.Component {
     this.state = {
       currentChord: 0,
       isPlaying: false,
+      showCurrentChord: true,
       soundObjectDuration: null,
       soundObjectPosition: null,
     }
@@ -39,9 +40,18 @@ export default class App extends React.Component {
             onPress={this._handlePlayPausePress}
           />
         </View>
+
+        <ChordButtons currentChord={this.state.currentChord} showCurrentChord={this.state.showCurrentChord}/>
+
+        <View style={styles.controlsContainer}>
+          <Text>Show current chord </Text>
+          <Switch
+            onValueChange={this._handleShowCurrentChordSwitch}
+            value={this.state.showCurrentChord}
+          >
+          </Switch>
+        </View>
         <Text>Position: {this._getTimestamp()} ms</Text>
-        <ChordButtons currentChord={this.state.currentChord} />
-        <Text>Current Chord: {this.state.currentChord}</Text>
       </View>
     );
   }
@@ -84,6 +94,10 @@ export default class App extends React.Component {
         this.soundObject.playAsync()
       }
     }
+  }
+
+  _handleShowCurrentChordSwitch = () => {
+    this.setState({showCurrentChord: !this.state.showCurrentChord})
   }
 
   _onPlaybackStatusUpdate = status => {

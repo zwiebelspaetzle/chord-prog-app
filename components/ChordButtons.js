@@ -26,7 +26,6 @@ class ChordButtons extends Component {
     return (
       <View>
         {chords.map((text, index) => this._getChordButton(text, index))}
-        <Text>Current button: {this.state.currentButton}</Text>
       </View>
     )
   }
@@ -34,7 +33,7 @@ class ChordButtons extends Component {
   _getChordButton = (text, index) => {
     let buttonStyle = [styles.chordButton]
 
-    if (this.state.currentButton === index) {
+    if (this.props.showCurrentChord && this.state.currentButton === index) {
       buttonStyle.push(styles.chordButtonCurrent)
     }
     if (this.state.selectedButton === index) {
