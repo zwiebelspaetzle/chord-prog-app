@@ -59,6 +59,9 @@ class ChordButtons extends Component {
 
   _handleChordButtonPress = (index) => {
     this.setState({selectedButton: index})
+    if (this.props.playBass) {
+      this.props.playBassFunction(chords[index])
+    }
   }
 }
 

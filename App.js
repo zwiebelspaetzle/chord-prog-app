@@ -88,30 +88,29 @@ export default class App extends React.Component {
           />
         </View>
 
-        <ChordButtons currentChord={this.state.currentChord} showCurrentChord={this.state.showCurrentChord}/>
+        <ChordButtons
+          currentChord={this.state.currentChord}
+          playBass={this.state.playBass}
+          playBassFunction={this._playBass}
+          showCurrentChord={this.state.showCurrentChord}
+        />
 
-        <View style={styles.controlsContainer}>
-          <Text>Show current chord </Text>
+        <View style={styles.settingsContainer}>
+          <Text style={styles.settingsText}>Show current chord </Text>
           <Switch
             onValueChange={() => this._handleToggle('showCurrentChord')}
             value={this.state.showCurrentChord}
           >
           </Switch>
         </View>
-        <View style={styles.controlsContainer}>
-          <Text>Play bass </Text>
+        <View style={styles.settingsContainer}>
+          <Text style={styles.settingsText}>Play bass </Text>
           <Switch
             onValueChange={() => this._handleToggle('playBass')}
             value={this.state.playBass}
           >
           </Switch>
         </View>
-
-        <Button
-          title="Click"
-          onPress={this._handleSamplerButtonPress}
-        >
-        </Button>
       </View>
     );
   }
@@ -172,14 +171,6 @@ export default class App extends React.Component {
     }
   }
 
-  _handleSamplerButtonPress = () => {
-    if (this.sampler != null) {
-      this.sampler['I'].replayAsync()
-    } else {
-      console.log('sampler is null')
-    }
-  }
-
   _loadChordMap(map) {
     this.chordMap = Array.from(map)
     this.setState({currentChord: this.chordMap[0]['chord']})
@@ -231,6 +222,14 @@ export default class App extends React.Component {
     })
   }
 
+  _playBass = (chord) => {
+    if (this.sampler != null) {
+      this.sampler[chord].replayAsync()
+    } else {
+      console.log('sampler is null')
+    }
+  }
+
   _skipToTrack = (index) => {
     this.soundObject.pauseAsync()
     this.setState(
@@ -261,6 +260,17 @@ const styles = StyleSheet.create({
     // fontFamily: 'Times New Roman',
     fontSize: 30,
     fontWeight: 'bold',
+  },
+  settingsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+  },
+  settingsText: {
+    fontSize: 16,
+    width: 200,
   }
 })
 
