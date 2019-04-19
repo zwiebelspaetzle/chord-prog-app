@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Switch, Text, View } from 'react-native'
+import { Button, StyleSheet, Switch, Text, View } from 'react-native'
 import { Audio, Icon } from 'expo'
 import ChordButtons from './components/ChordButtons'
 
@@ -38,6 +38,7 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
+    this._loadSampler()
     this._loadTune()
   }
 
@@ -76,6 +77,11 @@ export default class App extends React.Component {
           >
           </Switch>
         </View>
+        <Button
+          title="Click"
+          onPress={this._handleSamplerButtonPress}
+        >
+        </Button>
       </View>
     );
   }
@@ -131,6 +137,14 @@ export default class App extends React.Component {
     }
   }
 
+  _handleSamplerButtonPress = () => {
+    if (this.sampler != null) {
+      this.sampler.replayAsync()
+    } else {
+      console.log('sampler is null')
+    }
+  }
+
   _handleShowCurrentChordSwitch = () => {
     this.setState({showCurrentChord: !this.state.showCurrentChord})
   }
@@ -138,6 +152,16 @@ export default class App extends React.Component {
   _loadChordMap(map) {
     this.chordMap = Array.from(map)
     this.setState({currentChord: this.chordMap[0]['chord']})
+  }
+
+  async _loadSampler() {
+    this.sampler = new Audio.Sound();
+    try {
+      await this.sampler.loadAsync(require('./assets/audio/Alesis-Fusion-Acoustic-Bass-C2.wav'))
+      this.soundObject.setProgressUpdateIntervalAsync(statusUpdateInterval)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   _loadTune = () => {
